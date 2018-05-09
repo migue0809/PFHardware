@@ -1,8 +1,8 @@
 import RPi.GPIO as GPIO
 import time
+from SMCPINAJU.py import S1
+from SMCPINAJU.py import S2
 from SMCPINAJU.py import S5
-from SMCPINAJU.py import S4
-from SMCPINAJU.py import S3
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
