@@ -4,6 +4,8 @@ import time
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
 import Adafruit_MCP3008
+import RPi.GPIO as GPIO
+import time
 import serial
 import requests
 from datetime import datetime as date
@@ -11,6 +13,10 @@ SPI_PORT   = 0
 SPI_DEVICE = 0
 mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 n=0
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+GPIO.cleanup()
+GPIO.setup(16, GPIO.OUT)
 while True:
     S1 = 0
     S2 = 0
@@ -59,7 +65,13 @@ while True:
         p=p+1.0
     if(S_1<0.05):
         S_6=0.0
+    if (S_1<0.5 and S_2<0.5 and S_5>0.09):
+	    GPIO.output(16, False)
+	    print("Carga desconectada")
 
+    elif (S_1>0.5 or S_2>0.5 and S_5>0.09): 
+	    GPIO.output(16, True)
+	    print("Carga conectada")
     print("Corriente sensor 1 = "+str(S_1))
     print("Corriente sensor 2 = "+str(S_2))
     print("Corriente sensor 3 = "+str(S_3))
