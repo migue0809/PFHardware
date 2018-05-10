@@ -3,6 +3,7 @@ import time
 import os
 import Adafruit_MCP3008
 import Adafruit_GPIO.SPI as SPI
+import RPi.GPIO as GPIO
 import serial
 import requests
 from datetime import datetime as date
@@ -47,7 +48,10 @@ ina3.configure(voltage_range=ina.RANGE_32V,
 SPI_PORT   = 0
 SPI_DEVICE = 0
 mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
-
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+GPIO.cleanup()
+GPIO.setup(16, GPIO.OUT)
 while True:
     S1 = 0
     S2 = 0
@@ -99,28 +103,35 @@ while True:
         p=p+1
     if(S_1<0.05):
         S_6=0.0
-    S_1=str(S_1)
-    S_2=str(S_2)
-    S_3=str(S_3)
-    S_4=str(S_4)
-    S_5=str(S_5)
-    S_6=str(S_6)
-    S_7=str(S_7)
-    S_8=str(S_8)
+    if (S_1<0.5 and S_2<0.5 and S_5>0.09):
+	    GPIO.output(16, False)
+	    print("Carga desconectada")
+
+    elif (S_1>0.5 or S_2>0.5 and S_5>0.09): 
+	    GPIO.output(16, True)
+	    print("Carga conectada")
+    S_1=str(round(S_1,2))
+    S_2=str(round(S_2,2))
+    S_3=str(round(S_3,2))
+    S_4=str(round(S_4,2))
+    S_5=str(round(S_5,2))
+    S_6=str(round(S_6,2))
+    S_7=str(round(S_7,2))
+    S_8=str(round(S_8,2))
     v = ina.voltage()
-    i = str(ina.current()/1000)
+    i = str(round(ina.current()/1000,2))
     p = ina.power()
 
     v1 = ina1.voltage()
-    i1 = str(ina1.current()/1000)
+    i1 = str(round(ina1.current()/1000,2))
     p1 = ina1.power()
 
     v2 = ina2.voltage()
-    i2 = str(ina2.current()/1000)
+    i2 = str(round(ina2.current()/1000,2))
     p2 = ina2.power()
 
     v3 = ina3.voltage()
-    i3 = str(ina3.current()/1000)
+    i3 = str(round(ina3.current()/1000,2))
     p3 = ina3.power()
 
     #Vistos de izquierda a derecha

@@ -105,7 +105,7 @@ while True:
 	##Potencia Activa
     	try:
 	    fWatt = SharkMeter.read_float(1017,3,2)
-	    Watt=str(round(fWatt,2))
+	    Watt=str(round(fWatt,2)/1000.0)
 	    print("Potencia Activa Total = "+Watt)
 	
     	except:
@@ -115,7 +115,7 @@ while True:
 	##Energia Activa
     	try:
 	    fwatth = SharkMeter.read_long(1105,3,True)*10
-	    Watth=str(fwatth)
+	    Watth=str(fwatth/1000)
 	    print("Energia Activa Total = "+Watth)
 
     	except:
@@ -125,7 +125,7 @@ while True:
 	##Potencia Reactiva
     	try:
 	    fVar = SharkMeter.read_float(1019,3,2)
-	    Var = str(round(fVar,2))
+	    Var = str(round(fVar,2)/1000.0)
 	    print("Potencia Reactiva Total = "+Var)
     	except:
             Var = set()
@@ -134,7 +134,7 @@ while True:
 	##Energia Reactiva
     	try:
 	    fVarh = SharkMeter.read_long(1113,3,True)*10
-	    Varh=str(fVarh)
+	    Varh=str((fVarh/1000))
 	    print("Energia Reactiva Total = "+Varh)
 	
     	except:
@@ -144,7 +144,7 @@ while True:
 	##Potencia Aparente
     	try:
 	    fVas = SharkMeter.read_float(1021,3,2)
-	    Vas = str(round(fVas,2))
+	    Vas = str(round(fVas,2)/1000.0)
 	    print("Potencia Aparente Total = "+Vas)
 	
     	except:
@@ -154,7 +154,7 @@ while True:
 	##Energia Aparente
     	try:
 	    fVash = SharkMeter.read_long(1115,3,True)*10
-	    Vash=str(fVash)
+	    Vash=str(fVash/1000)
 	    print("Energia Aparente Total = "+Vash)
 	
     	except:
