@@ -150,20 +150,22 @@ while True:
     print("Voltaje sensor 3 = "+S_8)	## Sensor 8 de ADC  Canal 6
 	
 
-
-    response6 = requests.get('http://104.236.0.105/voltage_sensors?voltage1=%s&voltage2=%s&voltage3=%s&create=%s'%(S_6,S_7,S_8, str(date.now())),
-                        auth=requests.auth.HTTPBasicAuth(
-                          'admin',
-                          'uninorte'))
-    response7 = requests.get('http://104.236.0.105/low_current_sensors?current1=%s&current2=%s&current3=%s&current4=%s&create=%s'%(i, i1, i2, i3,str(date.now())),
-                        auth=requests.auth.HTTPBasicAuth(
-                          'admin',
-                          'uninorte'))
-    response8 = requests.get('http://104.236.0.105/high_current_sensors?current5=%s&current6=%s&current7=%s&current8%s&current9=%s&create=%s'%(S_1,S_2,S_3,S_4,S_5,str(date.now())),
+    try:
+        response6 = requests.get('http://104.236.0.105/voltage_sensors?voltage1=%s&voltage2=%s&voltage3=%s&create=%s'%(S_6,S_7,S_8, str(date.now())),
                             auth=requests.auth.HTTPBasicAuth(
                               'admin',
                               'uninorte'))
-    print(response6)
-    print(response7)
-    print(response8)
-    time.sleep(50)
+        response7 = requests.get('http://104.236.0.105/low_current_sensors?current1=%s&current2=%s&current3=%s&current4=%s&create=%s'%(i, i1, i2, i3,str(date.now())),
+                            auth=requests.auth.HTTPBasicAuth(
+                              'admin',
+                              'uninorte'))
+        response8 = requests.get('http://104.236.0.105/high_current_sensors?current5=%s&current6=%s&current7=%s&current8%s&current9=%s&create=%s'%(S_1,S_2,S_3,S_4,S_5,str(date.now())),
+                            auth=requests.auth.HTTPBasicAuth(
+                              'admin',
+                              'uninorte'))
+        print(response6)
+        print(response7)
+        print(response8)
+        time.sleep(30)
+    except:
+        time.sleep(10)
