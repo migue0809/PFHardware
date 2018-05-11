@@ -52,6 +52,7 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.cleanup()
 GPIO.setup(16, GPIO.OUT)
+a=0
 while True:
     S1 = 0
     S2 = 0
@@ -148,8 +149,8 @@ while True:
     print("Corriente sensor 8 = "+S_4)	## Sensor 6 de ADC  Canal 1
     print("Corriente sensor 9 = "+S_5)	## Sensor 7 de ADC  Canal 0
     print("Voltaje sensor 3 = "+S_8)	## Sensor 8 de ADC  Canal 6
-	
-
+    a=a+1	
+    print("Iteracion ="+str(a))
     try:
         response6 = requests.get('http://104.236.0.105/voltage_sensors?voltage1=%s&voltage2=%s&voltage3=%s&create=%s'%(S_6,S_7,S_8, str(date.now())),
                             auth=requests.auth.HTTPBasicAuth(
