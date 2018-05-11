@@ -111,6 +111,32 @@ while True:
     elif (S_1>0.5 or S_2>0.5 and S_5>0.09): 
 	    GPIO.output(16, True)
 	    print("Carga conectada")
+    v = ina.voltage()
+    i = round(ina.current()/1000,2)
+    p = ina.power()
+
+    v1 = ina1.voltage()
+    i1 = round(ina1.current()/1000,2)
+    p1 = ina1.power()
+
+    v2 = ina2.voltage()
+    i2 = round(ina2.current()/1000,2)
+    p2 = ina2.power()
+
+    v3 = ina3.voltage()
+    i3 = round(ina3.current()/1000,2)
+    p3 = ina3.power()
+    
+    If = i+i1+i2+i3
+    Pf = str(round(If*S_5,2))
+    Vp = ((2.5+S_7*0.1)*6)
+    Pp = str(round(Vp*S_7,2))
+    Ib = S_11-S_10
+    Pb = str(round(S_12*Ib,2))
+    i=str(i)
+    i1=str(i1)
+    i2=str(i2)
+    i3=str(i3)
     S_1=str(round(S_1,2))
     S_2=str(round(S_2,2))
     S_3=str(round(S_3,2))
@@ -119,22 +145,6 @@ while True:
     S_6=str(round(S_6,2))
     S_7=str(round(S_7,2))
     S_8=str(round(S_8,2))
-    v = ina.voltage()
-    i = str(round(ina.current()/1000,2))
-    p = ina.power()
-
-    v1 = ina1.voltage()
-    i1 = str(round(ina1.current()/1000,2))
-    p1 = ina1.power()
-
-    v2 = ina2.voltage()
-    i2 = str(round(ina2.current()/1000,2))
-    p2 = ina2.power()
-
-    v3 = ina3.voltage()
-    i3 = str(round(ina3.current()/1000,2))
-    p3 = ina3.power()
-
     #Vistos de izquierda a derecha
     print("Corriente sensor 1 = "+i)   ## Sensor de corriente 1 de I2C
     print("Corriente sensor 2 = "+i1)	## Sensor de corriente 2 de I2C
@@ -149,6 +159,9 @@ while True:
     print("Corriente sensor 8 = "+S_4)	## Sensor 6 de ADC  Canal 1
     print("Corriente sensor 9 = "+S_5)	## Sensor 7 de ADC  Canal 0
     print("Voltaje sensor 3 = "+S_8)	## Sensor 8 de ADC  Canal 6
+    print("Potencia de la fuente = "+Pf)
+    print("Potencia del panel = "+Pp)
+    print("Potencia de la bateria = "+Pb)
     a=a+1	
     print("Iteracion ="+str(a))
     try:
@@ -164,9 +177,14 @@ while True:
                             auth=requests.auth.HTTPBasicAuth(
                               'admin',
                               'uninorte'))
+        response9 = requests.get('http://104.236.0.105/node_powers?batteries=%s&red=%s&panel=%s&create=%s'%(Pb,Pf,Pp, str(date.now())),
+                            auth=requests.auth.HTTPBasicAuth(
+                              'admin',
+                              'uninorte'))
         print(response6)
         print(response7)
         print(response8)
+        print(response9)
         time.sleep(30)
     except:
         time.sleep(10)
