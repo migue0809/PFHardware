@@ -82,4 +82,4 @@ while True:
     print("Voltaje sensor 8 = "+str(S_8))
     n=n+1
     print(n)
-    time.sleep(20)
+    time.sleep(1)

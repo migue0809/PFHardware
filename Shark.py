@@ -115,7 +115,7 @@ while True:
 	##Energia Activa
     	try:
 	    fwatth = SharkMeter.read_long(1105,3,True)*10
-	    Watth=str(fwatth/1000)
+	    Watth=str(fwatth/1000.0)
 	    print("Energia Activa Total = "+Watth)
 
     	except:
@@ -134,7 +134,7 @@ while True:
 	##Energia Reactiva
     	try:
 	    fVarh = SharkMeter.read_long(1113,3,True)*10
-	    Varh=str((fVarh/1000))
+	    Varh=str((fVarh/1000.0))
 	    print("Energia Reactiva Total = "+Varh)
 	
     	except:
@@ -154,7 +154,7 @@ while True:
 	##Energia Aparente
     	try:
 	    fVash = SharkMeter.read_long(1115,3,True)*10
-	    Vash=str(fVash/1000)
+	    Vash=str(fVash/1000.0)
 	    print("Energia Aparente Total = "+Vash)
 	
     	except:
@@ -194,8 +194,13 @@ while True:
 	## Angulo de corriente linea B
     	try:
             fAmpPB = SharkMeter.read_register(4100,1,3,True)
-            AmpPB = str(int(fAmpPB))
-            print("Fase de corriente linea B = "+AmpPB)
+            if fAmpB!=0:
+                fAmpPB = fAmpPB + 120
+                AmpPB = str(int(fAmpPB))
+                print("Fase de corriente linea B = "+AmpPB) 
+            elif fAmpB==0:
+                AmpPB = str(int(fAmpPB))
+                print("Fase de corriente linea B = "+AmpPB)
 		
     	except:
             AmpPB = set()
@@ -204,8 +209,13 @@ while True:
 	## Angulo de corriente linea C
     	try:	
 	    fAmpPC = SharkMeter.read_register(4101,1,3,True)
-	    AmpPC = str(int(fAmpPC))
-	    print("Fase de corriente linea C = "+AmpPC)
+            if fAmpC!=0:
+                fAmpPC = fAmpPC - 120
+                AmpPC = str(int(fAmpPC))
+                print("Fase de corriente linea C = "+AmpPC)
+            elif fAmpC==0:
+                AmpPC = str(int(fAmpPC))
+                print("Fase de corriente linea C = "+AmpPC)
 		
     	except:
             AmpPC = set()
@@ -245,29 +255,29 @@ while True:
     print(t)
     print(str(date.now()))
     try:
-        response0 = requests.get('http://104.236.0.105/line_voltages_phases?vab=%s&pab=%s&vbc=%s&pbc=%s&vca=%s&pca=%s&create=%s'%(VoltageAB, VABPhase, VoltageBC, VBCPhase, VoltageCA, VCAPhase,str(date.now())),
+        response0 = requests.get('http://104.236.0.105:8080/line_voltages_phases?vab=%s&pab=%s&vbc=%s&pbc=%s&vca=%s&pca=%s&create=%s'%(VoltageAB, VABPhase, VoltageBC, VBCPhase, VoltageCA, VCAPhase,str(date.now())),
                         auth=requests.auth.HTTPBasicAuth(
                             'admin',
                             'uninorte'))
-        response1 = requests.get('http://104.236.0.105/phase_voltages?va=%s&vb=%s&vc=%s&create=%s'%(VoltageA, VoltageB, VoltageC, str(date.now())),
+        response1 = requests.get('http://104.236.0.105:8080/phase_voltages?va=%s&vb=%s&vc=%s&create=%s'%(VoltageA, VoltageB, VoltageC, str(date.now())),
                         auth=requests.auth.HTTPBasicAuth(
                             'admin',
                             'uninorte'))
-        response2 = requests.get('http://104.236.0.105/currents_phases?ca=%s&pa=%s&cb=%s&pb=%s&cc=%s&pc=%s&create=%s'%(AmpA, AmpPA, AmpB, AmpPB, AmpC, AmpPC,str(date.now())),
+        response2 = requests.get('http://104.236.0.105:8080/currents_phases?ca=%s&pa=%s&cb=%s&pb=%s&cc=%s&pc=%s&create=%s'%(AmpA, AmpPA, AmpB, AmpPB, AmpC, AmpPC,str(date.now())),
                             auth=requests.auth.HTTPBasicAuth(
                               'admin',
                               'uninorte'))
-        response3 = requests.get('http://104.236.0.105/frequency?freq=%s&pf=%s&create=%s'%(Freq,Fp,str(date.now())),
+        response3 = requests.get('http://104.236.0.105:8080/frequency?freq=%s&pf=%s&create=%s'%(Freq,Fp,str(date.now())),
                             auth=requests.auth.HTTPBasicAuth(
                                 'admin',
                                 'uninorte'))
 
-        response4 = requests.get('http://104.236.0.105/powers?watt=%s&var=%s&vas=%s&create=%s'%(Watt, Var, Vas, str(date.now())),
+        response4 = requests.get('http://104.236.0.105:8080/powers?watt=%s&var=%s&vas=%s&create=%s'%(Watt, Var, Vas, str(date.now())),
                             auth=requests.auth.HTTPBasicAuth(
                               'admin',
                               'uninorte'))
 
-        response5 = requests.get('http://104.236.0.105/energies?watth=%s&varh=%s&vash=%s&create=%s'%(Watth, Varh, Vash, str(date.now())),
+        response5 = requests.get('http://104.236.0.105:8080/energies?watth=%s&varh=%s&vash=%s&create=%s'%(Watth, Varh, Vash, str(date.now())),
                             auth=requests.auth.HTTPBasicAuth(
                               'admin',
                               'uninorte'))
@@ -278,6 +288,6 @@ while True:
         print(response3)
         print(response4)
         print(response5)
-        time.sleep(30)
+        time.sleep(50)
     except:
         time.sleep(10)

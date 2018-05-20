@@ -128,11 +128,11 @@ while True:
     p3 = ina3.power()
     
     If = i+i1+i2+i3
-    Pf = str(round(If*S_5,2))
-    Vp = ((2.5+S_7*0.1)*6)
-    Pp = str(round(Vp*S_7,2))
-    Ib = S_11-S_10
-    Pb = str(round(S_12*Ib,2))
+    Pf = str(round(If*S_1,2))
+    Vp = ((2.5+S_2*0.1)*6)
+    Pp = str(round(Vp*S_2,2))
+    Ib = S_5-S_3
+    Pb = str(abs(round(S_8*Ib,2)))
     i=str(i)
     i1=str(i1)
     i2=str(i2)
@@ -165,19 +165,19 @@ while True:
     a=a+1	
     print("Iteracion ="+str(a))
     try:
-        response6 = requests.get('http://104.236.0.105/voltage_sensors?voltage1=%s&voltage2=%s&voltage3=%s&create=%s'%(S_6,S_7,S_8, str(date.now())),
+        response6 = requests.get('http://104.236.0.105:8080/voltage_sensors?voltage1=%s&voltage2=%s&voltage3=%s&create=%s'%(S_6,S_7,S_8, str(date.now())),
                             auth=requests.auth.HTTPBasicAuth(
                               'admin',
                               'uninorte'))
-        response7 = requests.get('http://104.236.0.105/low_current_sensors?current1=%s&current2=%s&current3=%s&current4=%s&create=%s'%(i, i1, i2, i3,str(date.now())),
+        response7 = requests.get('http://104.236.0.105:8080/low_current_sensors?current1=%s&current2=%s&current3=%s&current4=%s&create=%s'%(i, i1, i2, i3,str(date.now())),
                             auth=requests.auth.HTTPBasicAuth(
                               'admin',
                               'uninorte'))
-        response8 = requests.get('http://104.236.0.105/high_current_sensors?current5=%s&current6=%s&current7=%s&current8%s&current9=%s&create=%s'%(S_1,S_2,S_3,S_4,S_5,str(date.now())),
+        response8 = requests.get('http://104.236.0.105:8080/high_current_sensors?current5=%s&current6=%s&current7=%s&current8%s&current9=%s&create=%s'%(S_1,S_2,S_3,S_4,S_5,str(date.now())),
                             auth=requests.auth.HTTPBasicAuth(
                               'admin',
                               'uninorte'))
-        response9 = requests.get('http://104.236.0.105/node_powers?batteries=%s&red=%s&panel=%s&create=%s'%(Pb,Pf,Pp, str(date.now())),
+        response9 = requests.get('http://104.236.0.105:8080/node_powers?batteries=%s&red=%s&panel=%s&create=%s'%(Pb,Pf,Pp, str(date.now())),
                             auth=requests.auth.HTTPBasicAuth(
                               'admin',
                               'uninorte'))
