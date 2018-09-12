@@ -11,19 +11,23 @@ from datetime import datetime as date
 from time import sleep
 from ina219 import INA219
 from Tkinter import *
-
 root=Tk()
-Frame=Frame(root,width=750,height=400)
-
-imagen_de_fondo = PhotoImage(file="Esq.gif")
-fondo = Label(root, image=imagen_de_fondo).place(x=0,y=0)
+Frame=Frame(root,width=500,height=400)
 Frame.pack()
 D0=StringVar()
 D1=StringVar()
 D2=StringVar()
 D3=StringVar()
+D4=StringVar()
+D5=StringVar()
+D6=StringVar()
+D7=StringVar()
+D8=StringVar()
 PBB=StringVar()
 PAB=StringVar()
+PBB1=StringVar()
+PAB1=StringVar()
+PBI=StringVar()
 ina = INA219(shunt_ohms=0.1,
              max_expected_amps = 2.0,
              address=0x40)
@@ -103,7 +107,7 @@ while True:
     S_2 = (((((S2/m)+5)*(5.0/1023))-2.5)/(0.063))
     S_3 = (((((S3/m)+5)*(5.0/1023))-2.5)/(0.090))
     S_4 = (((((S4/m)+5)*(5.0/1023))-2.5)/(0.095))
-    S_5 = (((((S5/m)+5)*(5.0/1023))-2.5)/(0.33))
+    S_5 = (((((S5/m)+5)*(5.0/1023))-2.5)/(0.33))-0.25
     S_6 = (((S6/m)*(5.0/1023))*(37000.0/7500.0))*14.4594417077 
     S_7 = (((S7/m)*(5.0/1023))*(37000.0/7500.0))*13.4594417077
     S_8 = ((S8/m)*(5.0/1023))*(37000.0/7500.0)
@@ -140,18 +144,47 @@ while True:
     v3 = ina3.voltage()
     i3 = round(ina3.current()/1000,2)
     p3 = ina3.power()
+    if(S_1<=0.0):
+        S_1=0.01
+    if(S_2<=0.0):
+        S_2=0.01
+    if(S_3<=0.0):
+        S_3=0.01
+    if(S_4<=0.0):
+        S_4=0.01
+    if(S_5<=0.0):
+        S_5=0.01
+    i4=S_1
+    i5=S_2
+    i6=abs(S_3-S_4)
+    i7=S_4
+    i8=abs(S_3-S_5)
+    If = i+i1+i2+i3
+    Pf = str(round(If*S_6,2))
     #VD0_AB=round(0.0565*Ln(i)+0.779,1)
     VD1_AB=round(0.0565*log(i1)+0.779,1)
     VD2_AB=round(0.0565*log(i2)+0.779,1)
     VD3_AB=round(0.0565*log(i3)+0.779,1)
+    VD4_AB=round(0.0565*log(i4)+0.779,1)
+    VD5_AB=round(0.0565*log(i5)+0.779,1)
+    VD6_AB=round(0.0565*log(i6)+0.779,1)
+    VD7_AB=round(0.0565*log(i7)+0.779,1)
+    VD8_AB=round(0.0565*log(i8)+0.779,1)
     PD1=str(round(VD1_AB*i1,1))
     PD2=str(round(VD2_AB*i2,1))
     PD3=str(round(VD3_AB*i3,1))
-    If = i+i1+i2+i3
-    Pf = str(round(If*S_6,2))
-    V5_AB=round(0.0565*log(S_1)+0.779,1)
-    VAfterBuck=round(S_7+V5_AB,1)
-    PAfterBuck=str(round(VAfterBuck*S_1,1))
+    PD4=str(round(VD4_AB*i4,1))
+    PD5=str(round(VD5_AB*i5,1))
+    PD6=str(round(VD6_AB*i6,1))
+    PD7=str(round(VD7_AB*i7,1))
+    PD8=str(round(VD8_AB*i8,1))
+    VAfterBuck=round(S_7+VD4_AB,1)
+    print(VAfterBuck)
+    PAfterBuck=str(round((VAfterBuck*S_1),1))
+    PBeforeBuck1=str(round((S_7*(i4+i5)),1))
+    VAfterBuck1=round(S_8+VD6_AB,1)
+    PAfterBuck1=str(round(VAfterBuck1*S_3,1))
+    PBeforeInverter=str(round(S_8*S_5,1))
     Vp = ((2.5+S_2*0.1)*6)
     Pp = str(round(Vp*S_2,2))
     Ib = S_5-S_3
@@ -168,15 +201,22 @@ while True:
     S_6=str(round(S_6,2))
     S_7=str(round(S_7,2))
     S_8=str(round(S_8,2))
-           #<<<<<<<< Cambiar
-##    imagen_de_fondo = PhotoImage(file="Esq.gif")
-##    fondo = Label(root, image=imagen_de_fondo)
-    ##D0.set(PD0)
+
+    #D0.set(PD0)
     D1.set(PD1)
     D2.set(PD2)
     D3.set(PD3)
+    D4.set(PD4)
+    D5.set(PD5)
+    D6.set(PD6)
+    D7.set(PD7)
+    D8.set(PD8)
+    
     PBB.set(Pf)
     PAB.set(PAfterBuck)
+    PBB1.set(PBeforeBuck1)
+    PAB1.set(PAfterBuck1)
+    PBI.set(PBeforeInverter)
     Sensor1Label=Label(Frame,text="PDiodo 1").grid(row=0, column=0)
     cuadro1=Entry(Frame, textvariable=0).grid(row=0, column=1)
     Sensor2Label=Label(Frame,text="PDiodo 2").grid(row=1, column=0)
@@ -185,11 +225,27 @@ while True:
     cuadro3=Entry(Frame, textvariable=D2).grid(row=2, column=1)
     Sensor4Label=Label(Frame,text="PDiodo 4").grid(row=3, column=0)
     cuadro4=Entry(Frame, textvariable=D3).grid(row=3, column=1)
-    Sensor5Label=Label(Frame,text="PAntesBuck ").grid(row=4, column=0)
-    cuadro5=Entry(Frame, textvariable=PBB).grid(row=4, column=1)
-    Sensor6Label=Label(Frame,text="PDespuesBuck ").grid(row=5, column=0)
-    cuadro6=Entry(Frame, textvariable=PAB).grid(row=5, column=1)
-    
+    BBuckLabel=Label(Frame,text="PAntesBuck ").grid(row=4, column=0)
+    cuadroBBuck=Entry(Frame, textvariable=PBB).grid(row=4, column=1)
+    ABuckLabel=Label(Frame,text="PDespuesBuck ").grid(row=5, column=0)
+    cuadroABuck=Entry(Frame, textvariable=PAB).grid(row=5, column=1)
+    Sensor5Label=Label(Frame,text="PDiodo 5").grid(row=6, column=0)
+    cuadro5=Entry(Frame, textvariable=D4).grid(row=6, column=1)
+    Sensor6Label=Label(Frame,text="PDiodo 6").grid(row=7, column=0)
+    cuadro6=Entry(Frame, textvariable=D5).grid(row=7, column=1)
+    BBuck1Label=Label(Frame,text="PAntesBuck 2 ").grid(row=8, column=0)
+    cuadroBBuck1=Entry(Frame, textvariable=PBB1).grid(row=8, column=1)
+    ABuck1Label=Label(Frame,text="PDespuesBuck ").grid(row=9, column=0)
+    cuadroABuck1=Entry(Frame, textvariable=PAB1).grid(row=9, column=1)
+    Sensor7Label=Label(Frame,text="PDiodo 7").grid(row=10, column=0)
+    cuadro7=Entry(Frame, textvariable=D6).grid(row=10, column=1)
+    Sensor8Label=Label(Frame,text="PDiodo 8").grid(row=11, column=0)
+    cuadro8=Entry(Frame, textvariable=D7).grid(row=11, column=1)
+    Sensor9Label=Label(Frame,text="PDiodo 9").grid(row=12, column=0)
+    cuadro9=Entry(Frame, textvariable=D8).grid(row=12, column=1)
+    BInverterLabel=Label(Frame,text="PAntesInverter ").grid(row=13, column=0)
+    cuadroBInverter=Entry(Frame, textvariable=PBI).grid(row=13, column=1)
+
     root.title("Interfaz Nodo 611")
     root.update()
     #Vistos de izquierda a derecha

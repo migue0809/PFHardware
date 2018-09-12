@@ -56,7 +56,7 @@ _LATEST_READ_TIMES = {}
 ## Default values ##
 ####################
 
-BAUDRATE = 19200
+BAUDRATE = 9600
 """Default value for the baudrate in Baud (int)."""
 
 PARITY   = serial.PARITY_NONE
