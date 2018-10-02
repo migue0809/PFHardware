@@ -11,26 +11,19 @@ from datetime import datetime as date
 from time import sleep
 from ina219 import INA219
 from Tkinter import *
+
 root=Tk()
-Frame=Frame(root,width=500,height=400)
-ListS_1=[]
-ListS_6=[]
-ListS_7=[]
-ListS_8=[]
+Frame=Frame(root,width=750,height=400)
+
+imagen_de_fondo = PhotoImage(file="Esq.gif")
+fondo = Label(root, image=imagen_de_fondo).place(x=0,y=0)
+
 D0=StringVar()
 D1=StringVar()
 D2=StringVar()
 D3=StringVar()
-D4=StringVar()
-D5=StringVar()
-D6=StringVar()
-D7=StringVar()
-D8=StringVar()
 PBB=StringVar()
 PAB=StringVar()
-PBB1=StringVar()
-PAB1=StringVar()
-PBI=StringVar()
 ina = INA219(shunt_ohms=0.1,
              max_expected_amps = 2.0,
              address=0x40)
@@ -74,7 +67,6 @@ GPIO.setmode(GPIO.BCM)
 GPIO.cleanup()
 GPIO.setup(16, GPIO.OUT)
 a=0
-
 while True:
     S1 = 0
     S2 = 0
@@ -107,30 +99,30 @@ while True:
 	t = t + 1
     m = 120
 
-    S_1 = (((((S1/m)+7)*(5.0/1023))-2.5)/(0.090))+0.2
-    S_2 = (((((S2/m)+6)*(5.0/1023))-2.5)/(0.063))+0.2
-    S_3 = (((((S3/m)+7)*(5.0/1023))-2.5)/(0.073))+0.2
+    S_1 = (((((S1/m)+7)*(5.0/1023))-2.5)/(0.090))
+    S_2 = (((((S2/m)+6)*(5.0/1023))-2.5)/(0.063))+0.1
+    S_3 = (((((S3/m)+7)*(5.0/1023))-2.5)/(0.075))
     S_4 = (((((S4/m)+7)*(5.0/1023))-2.5)/(0.095))
-    S_5 = (((((S5/m)+7)*(5.0/1023))-2.5)/(0.106))
-    S_6 = (((S6/m)*(5.0/1023))*(37000.0/7500.0))*14.5
-    S_7 = (((S7/m)*(5.0/1023))*(37000.0/7500.0))*12.5
+    S_5 = (((((S5/m)+7)*(5.0/1023))-2.5)/(0.083))
+    S_6 = (((S6/m)*(5.0/1023))*(37000.0/7500.0))*14.4594417077 
+    S_7 = (((S7/m)*(5.0/1023))*(37000.0/7500.0))*13.4594417077
     S_8 = ((S8/m)*(5.0/1023))*(37000.0/7500.0)
     
     p = 1.0
     while (p<10.0):
-        if (S_1>(p+0.5) and S_1<(p+1.5)):
-            S_6 = S_6+(2*p)
-            S_7 = S_7-(1.5*p)
-            S_8 = S_8-(p+1)/2
+        if (S_1>p and S_1<(p+1.0)):
+            S_6 = S_6+((3.2*p)-(p-1))
+            S_7 = S_7-1.5*(p-1)
+            S_8 = S_8-(p-1)/2
             break
         p=p+1
     if(S_1<0.05):
         S_6=0.0
-    if (S_1<0.1 and S_2<0.1 and S_5>0.09):
+    if (S_1<0.5 and S_2<0.5 and S_5>0.09):
 	    GPIO.output(16, False)
 	    print("Carga desconectada")
 
-    elif (S_1>0.1 or S_2>0.1 and S_5>0.09): 
+    elif (S_1>0.5 or S_2>0.5 and S_5>0.09): 
 	    GPIO.output(16, True)
 	    print("Carga conectada")
     v = ina.voltage()
@@ -148,78 +140,22 @@ while True:
     v3 = ina3.voltage()
     i3 = round(ina3.current()/1000,2)
     p3 = ina3.power()
-    if(i<=0.0):
-        i=0.01
-    if(i1<=0.0):
-        i1=0.01
-    if(i2<=0.0):
-        i2=0.01
-    if(i3<=0.0):
-        i3=0.01
-    if(S_1<=0.0):
-        S_1=0.01
-    if(S_2<=0.0):
-        S_2=0.01
-    if(S_3<=0.0):
-        S_3=0.01
-    if(S_4<=0.0):
-        S_4=0.01
-    if(S_5<=0.0):
-        S_5=0.01
-    i4=S_1
-    i5=S_2
-    if S_3==S_4:
-        i6=0.01
-    else:
-        i6=abs(S_3-S_4)
-    i7=S_4
-    i8=abs(S_5-S_3+S_4)
+    #VD0_AB=round(0.0565*Ln(i)+0.779,1)
+##    VD1_AB=round(0.0565*log(i1)+0.779,1)
+##    VD2_AB=round(0.0565*log(i2)+0.779,1)
+##    VD3_AB=round(0.0565*log(i3)+0.779,1)
+##    PD1=str(round(VD1_AB*i1,1))
+##    PD2=str(round(VD2_AB*i2,1))
+##    PD3=str(round(VD3_AB*i3,1))
     If = i+i1+i2+i3
     Pf = str(round(If*S_6,2))
+##    V5_AB=round(0.0565*log(S_1)+0.779,1)
+##    VAfterBuck=round(S_7+V5_AB,1)
+##    PAfterBuck=str(round(VAfterBuck*S_1,1))
     Vp = ((2.5+S_2*0.1)*6)
     Pp = str(round(Vp*S_2,2))
     Ib = S_5-S_3
     Pb = str(abs(round(S_8*Ib,2)))
-    VD0_AB=round(0.0326*log(i)+0.7812,3)
-    VD1_AB=round(0.0326*log(i1)+0.7812,3)
-    VD2_AB=round(0.0326*log(i2)+0.7812,3)
-    VD3_AB=round(0.0326*log(i3)+0.7812,3)
-    VD4_AB=round(0.0326*log(i4)+0.7812,3)
-    VD5_AB=round(0.0326*log(i5)+0.7812,3)
-    VD6_AB=round(0.0326*log(i6)+0.7812,3)
-    VD7_AB=round(0.0326*log(i7)+0.7812,3)
-    VD8_AB=round(0.0326*log(i8)+0.7812,3)
-    print(VD0_AB)
-    print(VD1_AB)
-    print(VD2_AB)
-    print(VD3_AB)
-    print(VD4_AB)
-    print(VD5_AB)
-    print(VD6_AB)
-    print(VD7_AB)
-    print(VD8_AB)
-    PD1=str(round(VD1_AB*i1,3))
-    PD2=str(round(VD2_AB*i2,3))
-    PD3=str(round(VD3_AB*i3,3))
-    PD4=str(round(VD4_AB*i4,3))
-    PD5=str(round(VD5_AB*i5,3))
-    PD6=str(round(VD6_AB*i6,3))
-    PD7=str(round(VD7_AB*i7,3))
-    PD8=str(round(VD8_AB*i8,3))
-    VAfterBuck=round(S_7+VD4_AB,3)
-    
-    PBeforeBuck=Pf
-    if If<0.1:
-        S_1=0.0
-    PAfterBuck=str(round((VAfterBuck*S_1),1))
-    
-        
-    
-    PBeforeBuck1=str(round((S_7*(i4+i5)),1))
-    VAfterBuck1=round(S_8+VD6_AB,1)
-    PAfterBuck1=str(round(VAfterBuck1*S_3,1))
-    PBeforeInverter=str(round(S_8*S_5,1))
-    ListS_1.append(S_1)
     i=str(i)
     i1=str(i1)
     i2=str(i2)
@@ -232,64 +168,28 @@ while True:
     S_6=str(round(S_6,2))
     S_7=str(round(S_7,2))
     S_8=str(round(S_8,2))
-    fichero = open('Sensor12.txt', 'a')
-    fichero.write(S_8+os.linesep)
-    fichero.close()
-    fichero1= open('Sensor8.txt', 'a')
-    fichero1.write(S_7+os.linesep)
-    fichero1.close()
-    fichero2= open('Sensor5.txt', 'a')
-    fichero2.write(S_6+os.linesep)
-    fichero2.close()
-    fichero3= open('Sensor6.txt', 'a')
-    fichero3.write(S_1+os.linesep)
-    fichero3.close()
-        
-
-    #D0.set(PD0)
-    D1.set(PD1)
-    D2.set(PD2)
-    D3.set(PD3)
-    D4.set(PD4)
-    D5.set(PD5)
-    D6.set(PD6)
-    D7.set(PD7)
-    D8.set(PD8)
+           #<<<<<<<< Cambiar
+##    imagen_de_fondo = PhotoImage(file="Esq.gif")
+##    fondo = Label(root, image=imagen_de_fondo)
+    ##D0.set(PD0)
+##    D1.set(PD1)
+##    D2.set(PD2)
+##    D3.set(PD3)
+##    PBB.set(Pf)
+##    PAB.set(PAfterBuck)
+##    Sensor1Label=Label(Frame,text="PDiodo 1").grid(row=0, column=0)
+##    cuadro1=Entry(Frame, textvariable=0).grid(row=0, column=1)
+##    Sensor2Label=Label(Frame,text="PDiodo 2").grid(row=1, column=0)
+##    cuadro2=Entry(Frame, textvariable=D1).grid(row=1, column=1)
+##    Sensor3Label=Label(Frame,text="PDiodo 3").grid(row=2, column=0)
+##    cuadro3=Entry(Frame, textvariable=D2).grid(row=2, column=1)
+##    Sensor4Label=Label(Frame,text="PDiodo 4").grid(row=3, column=0)
+##    cuadro4=Entry(Frame, textvariable=D3).grid(row=3, column=1)
+##    Sensor5Label=Label(Frame,text="PAntesBuck ").grid(row=4, column=0)
+##    cuadro5=Entry(Frame, textvariable=PBB).grid(row=4, column=1)
+##    Sensor6Label=Label(Frame,text="PDespuesBuck ").grid(row=5, column=0)
+##    cuadro6=Entry(Frame, textvariable=PAB).grid(row=5, column=1)
     
-    PBB.set(PBeforeBuck)
-    PAB.set(PAfterBuck)
-    PBB1.set(PBeforeBuck1)
-    PAB1.set(PAfterBuck1)
-    PBI.set(PBeforeInverter)
-    Sensor1Label=Label(Frame,text="PDiodo 1").grid(row=0, column=0)
-    cuadro1=Entry(Frame, textvariable=0).grid(row=0, column=1)
-    Sensor2Label=Label(Frame,text="PDiodo 2").grid(row=1, column=0)
-    cuadro2=Entry(Frame, textvariable=D1).grid(row=1, column=1)
-    Sensor3Label=Label(Frame,text="PDiodo 3").grid(row=2, column=0)
-    cuadro3=Entry(Frame, textvariable=D2).grid(row=2, column=1)
-    Sensor4Label=Label(Frame,text="PDiodo 4").grid(row=3, column=0)
-    cuadro4=Entry(Frame, textvariable=D3).grid(row=3, column=1)
-    BBuckLabel=Label(Frame,text="PAntesBuck ").grid(row=4, column=0)
-    cuadroBBuck=Entry(Frame, textvariable=PBB).grid(row=4, column=1)
-    ABuckLabel=Label(Frame,text="PDespuesBuck ").grid(row=5, column=0)
-    cuadroABuck=Entry(Frame, textvariable=PAB).grid(row=5, column=1)
-    Sensor5Label=Label(Frame,text="PDiodo 5").grid(row=6, column=0)
-    cuadro5=Entry(Frame, textvariable=D4).grid(row=6, column=1)
-    Sensor6Label=Label(Frame,text="PDiodo 6").grid(row=7, column=0)
-    cuadro6=Entry(Frame, textvariable=D5).grid(row=7, column=1)
-    BBuck1Label=Label(Frame,text="PAntesBuck 2 ").grid(row=8, column=0)
-    cuadroBBuck1=Entry(Frame, textvariable=PBB1).grid(row=8, column=1)
-    ABuck1Label=Label(Frame,text="PDespuesBuck ").grid(row=9, column=0)
-    cuadroABuck1=Entry(Frame, textvariable=PAB1).grid(row=9, column=1)
-    Sensor7Label=Label(Frame,text="PDiodo 7").grid(row=10, column=0)
-    cuadro7=Entry(Frame, textvariable=D6).grid(row=10, column=1)
-    Sensor8Label=Label(Frame,text="PDiodo 8").grid(row=11, column=0)
-    cuadro8=Entry(Frame, textvariable=D7).grid(row=11, column=1)
-    Sensor9Label=Label(Frame,text="PDiodo 9").grid(row=12, column=0)
-    cuadro9=Entry(Frame, textvariable=D8).grid(row=12, column=1)
-    BInverterLabel=Label(Frame,text="PAntesInverter ").grid(row=13, column=0)
-    cuadroBInverter=Entry(Frame, textvariable=PBI).grid(row=13, column=1)
-
     root.title("Interfaz Nodo 611")
     Frame.pack()
     root.update()
@@ -333,7 +233,7 @@ while True:
         print(response7)
         print(response8)
         print(response9)
-        time.sleep(60)
+        time.sleep(30)
     except:
         time.sleep(10)
     
