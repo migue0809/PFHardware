@@ -189,15 +189,100 @@ while True:
     VD6_AB=round(0.0326*log(i6)+0.7812,3)
     VD7_AB=round(0.0326*log(i7)+0.7812,3)
     VD8_AB=round(0.0326*log(i8)+0.7812,3)
-    print(VD0_AB)
-    print(VD1_AB)
-    print(VD2_AB)
-    print(VD3_AB)
-    print(VD4_AB)
-    print(VD5_AB)
-    print(VD6_AB)
-    print(VD7_AB)
-    print(VD8_AB)
+    
+    VAD0=VD0_AB+S_6
+    VAD1=VD1_AB+S_6
+    VAD2=VD2_AB+S_6
+    VAD3=VD3_AB+S_6
+    VAD4=VD4_AB+S_7
+    VAD5=VD5_AB+S_7
+    VAD6=VD6_AB+S_8
+    VAD8=VD8_AB+S_8
+    print("Voltaje Diodo 0 "+str(VD0_AB))
+    print("Voltaje Diodo 1 "+str(VD1_AB))
+    print("Voltaje Diodo 2 "+str(VD2_AB))
+    print("Voltaje Diodo 3 "+str(VD3_AB))
+    print("Voltaje Diodo 4 "+str(VD4_AB))
+    print("Voltaje Diodo 5 "+str(VD5_AB))
+    print("Voltaje Diodo 6 "+str(VD6_AB))
+    print("Voltaje Diodo 7 "+str(VD7_AB))
+    print("Voltaje Diodo 8 "+str(VD8_AB))
+
+    #Potencias antes de diodos
+    PAD0=VAD0*i
+    PAD1=VAD1*i1
+    PAD2=VAD2*i2
+    PAD3=VAD3*i3
+    PAD4=VAD4*i4
+    PAD5=VAD5*i5
+    PAD6=VAD6*i6
+    PAD7=VAD6*i7
+    PAD8=VAD8*i8
+    print("Potencia antes del Diodo 0 "+str(PAD0))
+    print("Potencia antes del Diodo 1 "+str(PAD1))
+    print("Potencia antes del Diodo 2 "+str(PAD2))
+    print("Potencia antes del Diodo 3 "+str(PAD3))
+    print("Potencia antes del Diodo 4 "+str(PAD4))
+    print("Potencia antes del Diodo 5 "+str(PAD5))
+    print("Potencia antes del Diodo 6 "+str(PAD6))
+    print("Potencia antes del Diodo 7 "+str(PAD7))
+    print("Potencia antes del Diodo 8 "+str(PAD8))
+    #Potencias despues diodos
+    PDD0=S_6*i
+    PDD1=S_6*i1
+    PDD2=S_6*i2
+    PDD3=S_6*i3
+    PDD4=S_7*i4
+    PDD5=S_7*i5
+    PDD6=S_8*i6
+    PDD7=VAD8*i7
+    PDD8=S_8*i8
+    print("Potencia despues del Diodo 0 "+str(PDD0))
+    print("Potencia despues del Diodo 1 "+str(PDD1))
+    print("Potencia despues del Diodo 2 "+str(PDD2))
+    print("Potencia despues del Diodo 3 "+str(PDD3))
+    print("Potencia despues del Diodo 4 "+str(PDD4))
+    print("Potencia despues del Diodo 5 "+str(PDD5))
+    print("Potencia despues del Diodo 6 "+str(PDD6))
+    print("Potencia despues del Diodo 7 "+str(PDD7))
+    print("Potencia despues del Diodo 8 "+str(PDD8))
+    fichero = open('Diodo0.txt', 'a')
+    fichero.write(str(PAD0)+os.linesep)
+    fichero.write(str(PDD0)+os.linesep)
+    fichero.close()
+    fichero1= open('Diodo1.txt', 'a')
+    fichero1.write(str(PAD1)+os.linesep)
+    fichero1.write(str(PDD1)+os.linesep)
+    fichero1.close()
+    fichero2= open('Diodo2.txt', 'a')
+    fichero2.write(str(PAD2)+os.linesep)
+    fichero2.write(str(PDD2)+os.linesep)
+    fichero2.close()
+    fichero3= open('Diodo3.txt', 'a')
+    fichero3.write(str(PAD3)+os.linesep)
+    fichero3.write(str(PDD3)+os.linesep)
+    fichero3.close()
+    fichero4= open('Diodo4.txt', 'a')
+    fichero4.write(str(PAD4)+os.linesep)
+    fichero4.write(str(PDD4)+os.linesep)
+    fichero4.close()
+    fichero5= open('Diodo5.txt', 'a')
+    fichero5.write(str(PAD5)+os.linesep)
+    fichero5.write(str(PDD5)+os.linesep)
+    fichero5.close()
+    fichero6= open('Diodo6.txt', 'a')
+    fichero6.write(str(PAD6)+os.linesep)
+    fichero6.write(str(PDD6)+os.linesep)
+    fichero6.close()
+    fichero7= open('Diodo7.txt', 'a')
+    fichero7.write(str(PAD7)+os.linesep)
+    fichero7.write(str(PDD7)+os.linesep)
+    fichero7.close()
+    fichero8= open('Diodo8.txt', 'a')
+    fichero8.write(str(PAD8)+os.linesep)
+    fichero8.write(str(PDD8)+os.linesep)
+    fichero8.close()
+
     PD1=str(round(VD1_AB*i1,3))
     PD2=str(round(VD2_AB*i2,3))
     PD3=str(round(VD3_AB*i3,3))
@@ -232,18 +317,17 @@ while True:
     S_6=str(round(S_6,2))
     S_7=str(round(S_7,2))
     S_8=str(round(S_8,2))
-    fichero = open('Sensor12.txt', 'a')
-    fichero.write(S_8+os.linesep)
-    fichero.close()
-    fichero1= open('Sensor8.txt', 'a')
-    fichero1.write(S_7+os.linesep)
-    fichero1.close()
-    fichero2= open('Sensor5.txt', 'a')
-    fichero2.write(S_6+os.linesep)
-    fichero2.close()
-    fichero3= open('Sensor6.txt', 'a')
-    fichero3.write(S_1+os.linesep)
-    fichero3.close()
+    fichero9= open('Buck1.txt', 'a')
+    fichero9.write(PBeforeBuck+os.linesep)
+    fichero9.write(PAfterBuck+os.linesep)
+    fichero9.close()
+    fichero10= open('Buck2.txt', 'a')
+    fichero10.write(PBeforeBuck1+os.linesep)
+    fichero10.write(PAfterBuck1+os.linesep)
+    fichero10.close()
+    fichero11= open('Inverter.txt', 'a')
+    fichero11.write(PBeforeInverter+os.linesep)
+    fichero11.close()
         
 
     #D0.set(PD0)
