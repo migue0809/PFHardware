@@ -109,9 +109,9 @@ while True:
 
     S_1 = (((((S1/m)+7)*(5.0/1023))-2.5)/(0.090))+0.2
     S_2 = (((((S2/m)+6)*(5.0/1023))-2.5)/(0.063))+0.2
-    S_3 = (((((S3/m)+7)*(5.0/1023))-2.5)/(0.073))+0.2
+    S_3 = (((((S3/m)+7)*(5.0/1023))-2.5)/(0.088))+0.2
     S_4 = (((((S4/m)+7)*(5.0/1023))-2.5)/(0.095))
-    S_5 = (((((S5/m)+7)*(5.0/1023))-2.5)/(0.106))
+    S_5 = (((((S5/m)+7)*(5.0/1023))-2.5)/(0.100))
     S_6 = (((S6/m)*(5.0/1023))*(37000.0/7500.0))*14.5
     S_7 = (((S7/m)*(5.0/1023))*(37000.0/7500.0))*12.5
     S_8 = ((S8/m)*(5.0/1023))*(37000.0/7500.0)
@@ -119,8 +119,8 @@ while True:
     p = 1.0
     while (p<10.0):
         if (S_1>(p+0.5) and S_1<(p+1.5)):
-            S_6 = S_6+(2*p)
-            S_7 = S_7-(1.5*p)
+            S_6 = S_6+(4.0*p)
+            S_7 = S_7-(2.0*p)
             S_8 = S_8-(p+1)/2
             break
         p=p+1
@@ -396,6 +396,8 @@ while True:
     print("Potencia de la bateria = "+Pb)
     a=a+1	
     print("Iteracion ="+str(a))
+    if a==30:
+        break
     try:
         response6 = requests.get('http://104.236.0.105:8080/voltage_sensors?voltage1=%s&voltage2=%s&voltage3=%s&create=%s'%(S_6,S_7,S_8, str(date.now())),
                             auth=requests.auth.HTTPBasicAuth(
@@ -417,7 +419,7 @@ while True:
         print(response7)
         print(response8)
         print(response9)
-        time.sleep(60)
+        time.sleep(30)
     except:
         time.sleep(10)
     
